@@ -1,0 +1,33 @@
+{
+  "name": "journal-monitor",
+  "version": "1.0.0",
+  "description": "TikTok-style browser for academic journal articles",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "deploy": "npm run build && cp main.js manifest.json styles.css /mnt/c/Users/elbge/Documents/Obsidian/Obtero/.obsidian/plugins/journal-monitor/",
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
+  },
+  "keywords": [
+    "obsidian",
+    "plugin",
+    "journal",
+    "academic",
+    "literature"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bullocke/obsidian-journal-monitor.git"
+  },
+  "author": "Eric",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "0.19.8",
+    "obsidian": "latest",
+    "tslib": "2.6.2",
+    "typescript": "5.3.2"
+  }
+}
