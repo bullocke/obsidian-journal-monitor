@@ -1,6 +1,6 @@
 # Journal Monitor
 
-A TikTok-style browser for academic journal articles in Obsidian. Stay current with the latest research by swiping through articles from your favorite journals, saving interesting papers directly to your vault with full metadata and BibTeX citations.
+A TikTok-style browser for academic journal articles in Obsidian. Stay current with the latest research by swiping through articles from your favorite journals, saving interesting papers directly to your vault with full metadata and BibTeX citations. Note that only the article metadata and abstracts are fetched - the full text PDFs are not downloaded by this plugin. Not all journals provide abstracts via the APIs, so availability may vary. This plugin is in early beta, so expect some rough edges and missing features, but the core browsing and saving functionality is there!
 
 ![Obsidian](https://img.shields.io/badge/Obsidian-1.0+-purple)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -50,6 +50,16 @@ Saved articles automatically create notes with:
 - **Badge notifications** showing unread count
 
 ## Installation
+
+### Beta Testing (BRAT)
+
+The easiest way to test this plugin before it is available in the community directory is by using the [Obsidian BRAT plugin](https://github.com/TfTHacker/obsidian42-brat).
+
+1. Install the **BRAT** plugin from the Obsidian Community Plugins directory and enable it.
+2. Open the command palette (`Ctrl/Cmd + P`) and run the command **BRAT: Add a beta plugin for testing**.
+3. Paste the URL of this repository: `https://github.com/bullocke/obsidian-journal-monitor`
+4. Click **Add Plugin**.
+5. Go to **Settings > Community Plugins** and enable **Journal Monitor**.
 
 ### From Source (Development)
 

@@ -20,6 +20,11 @@ async function fetchAbstractFromCrossRef(doi: string): Promise<string | undefine
       method: 'GET',
       headers: { 'Accept': 'application/json' },
     });
+    
+    if (!response.json || typeof response.json !== 'object') {
+      return undefined;
+    }
+    
     const work = response.json?.message;
     if (work?.abstract) {
       // CrossRef abstracts often contain HTML tags
@@ -228,6 +233,11 @@ export async function fetchFromOpenAlex(
     
     const data = response.json as OpenAlexResponse;
     
+    if (!data || !Array.isArray(data.results)) {
+      console.warn(`OpenAlex returned unexpected data format for ${journal.name}`);
+      return [];
+    }
+    
     return data.results
       .map(work => openAlexToArticle(work, journal.name, journal.issn))
       .filter((a): a is Article => a !== null);
@@ -272,6 +282,11 @@ export async function fetchFromCrossRef(
     });
     
     const data = response.json as CrossRefResponse;
+    
+    if (!data || !data.message || !Array.isArray(data.message.items)) {
+      console.warn(`CrossRef returned unexpected data format for ${journal.name}`);
+      return [];
+    }
     
     return data.message.items
       .map(work => crossRefToArticle(work, journal.name, journal.issn))

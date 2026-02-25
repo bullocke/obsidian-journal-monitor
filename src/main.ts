@@ -27,6 +27,8 @@ export default class JournalMonitorPlugin extends Plugin {
   settings: JournalMonitorSettings;
   data: JournalMonitorData;
   ribbonIconEl: HTMLElement | null = null;
+  startupTimeout: number | null = null;
+  statusBarItem: HTMLElement | null = null;
 
   async onload() {
     console.log('Loading Journal Monitor plugin');
@@ -89,16 +91,19 @@ export default class JournalMonitorPlugin extends Plugin {
     // Auto-fetch on startup if enabled
     if (this.settings.fetchOnStartup) {
       // Delay to let Obsidian fully load
-      setTimeout(() => this.checkAndFetch(), 5000);
+      this.startupTimeout = window.setTimeout(() => this.checkAndFetch(), 5000);
     }
 
     // Add status bar item
-    const statusBarItem = this.addStatusBarItem();
-    this.updateStatusBar(statusBarItem);
+    this.statusBarItem = this.addStatusBarItem();
+    this.updateStatusBar(this.statusBarItem);
   }
 
   onunload() {
     console.log('Unloading Journal Monitor plugin');
+    if (this.startupTimeout !== null) {
+      window.clearTimeout(this.startupTimeout);
+    }
   }
 
   async loadSettings() {
@@ -172,7 +177,12 @@ export default class JournalMonitorPlugin extends Plugin {
       this.app,
       this.settings,
       this.data,
-      () => this.savePluginData(),
+      () => {
+        this.savePluginData();
+        if (this.statusBarItem) {
+          this.updateStatusBar(this.statusBarItem);
+        }
+      },
       () => this.openFilterModal()
     );
     modal.open();
@@ -316,6 +326,10 @@ export default class JournalMonitorPlugin extends Plugin {
 
     await this.savePluginData();
     this.updateRibbonBadge();
+    
+    if (this.statusBarItem) {
+      this.updateStatusBar(this.statusBarItem);
+    }
 
     if (this.settings.notifyOnNewArticles && newArticleCount > 0) {
       new Notice(`Found ${newArticleCount} new articles!`);

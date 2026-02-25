@@ -5,8 +5,9 @@ import { Article, JournalMonitorSettings, FilterConfig } from './types';
  * Generate a safe filename from article title
  */
 export function generateFilename(article: Article): string {
-  const firstAuthor = article.authors[0]?.split(',')[0]?.split(' ').pop() || 'Unknown';
-  const year = article.year;
+  const firstAuthorRaw = article.authors[0]?.split(',')[0]?.split(' ').pop() || 'Unknown';
+  const firstAuthor = firstAuthorRaw.replace(/[^\w\s-]/g, '');
+  const year = String(article.year).replace(/[^\w\s-]/g, '');
   
   // Clean title for filename
   const titleWords = article.title
@@ -44,18 +45,18 @@ function generateFrontmatter(article: Article, settings: JournalMonitorSettings)
   
   lines.push(`journal: "${escapeYaml(article.journal)}"`);
   
-  if (article.volume) lines.push(`volume: "${article.volume}"`);
-  if (article.issue) lines.push(`issue: "${article.issue}"`);
-  if (article.pages) lines.push(`pages: "${article.pages}"`);
+  if (article.volume) lines.push(`volume: "${escapeYaml(article.volume)}"`);
+  if (article.issue) lines.push(`issue: "${escapeYaml(article.issue)}"`);
+  if (article.pages) lines.push(`pages: "${escapeYaml(article.pages)}"`);
   
   lines.push(`year: ${article.year}`);
   lines.push(`date: ${article.date}`);
-  lines.push(`doi: "${article.doi}"`);
-  lines.push(`url: "${article.url}"`);
-  lines.push(`issn: "${article.journalIssn}"`);
+  lines.push(`doi: "${escapeYaml(article.doi || '')}"`);
+  lines.push(`url: "${escapeYaml(article.url || '')}"`);
+  lines.push(`issn: "${escapeYaml(article.journalIssn || '')}"`);
   
   if (article.openAccessUrl) {
-    lines.push(`open_access_url: "${article.openAccessUrl}"`);
+    lines.push(`open_access_url: "${escapeYaml(article.openAccessUrl)}"`);
   }
   
   if (settings.includeKeywords && article.keywords && article.keywords.length > 0) {
